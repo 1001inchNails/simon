@@ -1,0 +1,4 @@
+cambiar responsive, modo normal mas grande
+meterle css, organizar todo bien
+
+meterle sonidos
