@@ -1,0 +1,97 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+  }
+  
+  .simon-main {
+    position: relative;
+    margin: 0 auto;
+  }
+  
+  .simon-cont {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #333;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .simon-button {
+    width: 50%;
+    height: 50%;
+    position: absolute;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  
+  .simon-button:hover {
+    opacity: 1;
+  }
+  
+  .verde {
+    background-color: green;
+    top: 0;
+    left: 0;
+    border-radius: 100% 0 0 0;
+  }
+  
+  .rojo {
+    background-color: red;
+    top: 0;
+    right: 0;
+    border-radius: 0 100% 0 0;
+  }
+  
+  .amarillo {
+    background-color: yellow;
+    bottom: 0;
+    left: 0;
+    border-radius: 0 0 0 100%;
+  }
+  
+  .azul {
+    background-color: blue;
+    bottom: 0;
+    right: 0;
+    border-radius: 0 0 100% 0;
+  }
+  
+  .simon-centro {
+    width: 20%;
+    height: 20%;
+    background-color: grey;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .simon-centro:hover{
+    background-color: rgb(155, 155, 155);
+  }
+  
+  /* Responsive */
+
+  .simon-main {
+    width: 300px;
+    height: 300px;
+  }
+  
+  @media (min-width: 768px) {
+    .simon-main {
+      width: 400px;
+      height: 400px;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .simon-main {
+      width: 500px;
+      height: 500px;
+    }
+  }
