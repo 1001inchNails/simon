@@ -1,5 +1,13 @@
 verificar  que scores y max scroes cambien correctamente al reiniciar partida
 
+boton de reiniciar
+
+efecto 3d de tablero
+
+background + layer, z-indexes 1-2, para subir opacidad cuando se juega para darle mas oscuridad. pasar z-indexes 1-2 existentes a 3-4, meterle los indexes correctos a todo el tablero.
+
+
+
 cambiar responsive, modo normal mas grande
 meterle css, organizar todo bien
 
