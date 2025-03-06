@@ -1,4 +1,9 @@
+verificar  que scores y max scroes cambien correctamente al reiniciar partida
+
 cambiar responsive, modo normal mas grande
 meterle css, organizar todo bien
+
+hacer el cambio de turno y fin de partida mas evidente, estilo/fondo/posicion de los avisos
+
 
 meterle sonidos
