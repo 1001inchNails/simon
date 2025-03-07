@@ -8,3 +8,5 @@ hacer el cambio de turno y fin de partida mas evidente, estilo/fondo/posicion de
 meterle sonidos
 
 comentarios
+
+probar en varios browsers
