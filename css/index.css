@@ -1,11 +1,31 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
+@font-face {
+  font-family: 'tox';
+  src: url('../fonts/toxigenesis.otf');
+  font-weight: normal;
+  font-style: normal;
   }
-  
+  *{
+  margin: 0;
+  padding: 0%;
+  font-family: 'tox';
+  color: white;
+  }
+body {
+  background-image: url('../img/wave-energy.png');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat; 
+  overflow: hidden;
+}
+  main{
+    transition: background-color 0.9s ease;
+    background-color: rgb(0, 0, 0, 0);
+    height: 100vh;
+  }
   .simon-main {
     position: relative;
     margin: 0 auto;
+    perspective: 1000px; /* Add perspective for 3D effect */
   }
   
   .simon-cont {
@@ -15,31 +35,68 @@ body {
     background-color: #333;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    border: 10px solid #000;
-  }
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.5), /* Strong shadow for depth */
+        0 0 0 20px #000, /* Outer border (strong black) */
+        0 0 0 40px #111, /* Middle border (darker black) */
+        0 0 0 60px #222; /* Inner border (dark gray) */
+    transform: rotateX(45deg) translateZ(50px); /* Tilt and push forward in 3D space */
+    transform-style: preserve-3d; /* Preserve 3D transformations */
+    transition: transform 0.5s ease;
+}
+
+.simon-cont::before {
+    content: '';
+    position: absolute;
+    top: -60px; /* Extend the border outward */
+    left: -60px;
+    right: -60px;
+    bottom: -60px;
+    border-radius: 50%;
+    border: 15px solid #000; /* Thicker outer border (strong black) */
+    transform: translateZ(-60px); /* Push the border back in 3D space */
+    box-shadow: 
+        inset 0 0 20px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(0, 0, 0, 0.5); /* Add an outer shadow for depth */
+}
+
+.simon-cont::after {
+    content: '';
+    position: absolute;
+    top: -80px; /* Extend further for the base */
+    left: -80px;
+    right: -80px;
+    bottom: -80px;
+    border-radius: 50%;
+    background-color: #111; /* Base color (darker black) */
+    transform: translateZ(-100px); /* Push the base further back */
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.5), /* Shadow for the base */
+        inset 0 0 20px rgba(0, 0, 0, 0.5); /* Inner shadow for the base */
+}
+
   
   .simon-button {
     width: 50%;
     height: 50%;
     position: absolute;
     cursor: pointer;
-    opacity: 0.7;
+    opacity: 0.4;
     transition: opacity 0.2s, transform 0.2s;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
     border: 8px solid #000;
-    z-index: 1;
+    z-index: 3;
   }
-
+  
   .simon-button.illuminati {
     opacity: 1;
     transform: scale(1.05);
-    z-index: 2;
-}
+    z-index: 4;
+  }
   
   .simon-button:hover {
     opacity: 1;
-    z-index: 2;
+    z-index: 4;
   }
   
   .verde {
@@ -81,8 +138,8 @@ body {
     transform: translate(-50%, -50%);
     cursor: pointer;
     transition: background-color 0.2s, transform 0.2s;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-    z-index: 3;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    z-index: 5;
     border: 6px solid #000;
   }
   
@@ -90,6 +147,24 @@ body {
     background-color: #777;
     transform: translate(-50%, -50%) scale(1.1);
   }
+
+
+  #botns{
+    padding: 10px;
+  }
+  
+#dificultadJ{
+  width: fit-content;
+}
+
+#labDif{
+  margin: 0;
+}
+
+#top-container{
+  margin-top: 20px;
+  margin-bottom: 25px;
+}
   
   /* Responsive */
   

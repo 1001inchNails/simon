@@ -1,36 +1,54 @@
 $(document).ready(async function() {
 
-    let secuenciaJuego = [];
-    let elementoPulsado = null;
-    let juegoRunning = false;
-    let timer1;
-    let tramo1;
-    let finPorTiempo = false;
-    let score = 0;
-    let maxScore = 0;
-
-
-    let currentTiempoModo;
-    let currentRetrasoEncendido;
-
     $('#verde').css('pointer-events','none');   // por defecto, anulados
     $('#rojo').css('pointer-events','none');
     $('#amarillo').css('pointer-events','none');
     $('#azul').css('pointer-events','none');
 
+    $('#pTimer').css('visibility','hidden');
+
+    let secuenciaJuego = [];
+    let elementoPulsado = null;
+    let juegoRunning = false;
+    let timer1;
+    let tramo1;
+    let score = 0;
+    let maxScore;
+
+
+    await $.ajax({    
+        type: 'get',
+        url: 'https://simon-api-two.vercel.app/api/getmaxscore',
+        data:'',
+        success: function(response) {
+            console.log(response);
+            if (typeof response.resultado === 'number'){
+                maxScore = response.resultado;
+            }else{
+                maxScore = 0;
+                console.log("You Boys Dun Goofed Up");
+            }
+        }
+    });
+
+    document.getElementById("max-score").textContent = maxScore;
+
+    let currentTiempoModo;
+    let currentRetrasoEncendido;
 
     function resetVariables(){
+        clearInterval(timer1);
         secuenciaJuego = [];
         juegoRunning = false;
         elementoPulsado = null;
         timer1 = null;
         tramo1 = null;
-        finPorTiempo = false;
         score = 0;
         $('#startG').css('pointer-events','auto');
         document.getElementById("mensaje").textContent = 'Pulse el boton central para comenzar';
         document.getElementById("timerM").textContent = '';
-        $('#contDif').css('display','block');
+        document.getElementById("score").textContent = 0;
+        $('#dificultadJCont').css('visibility','visible');
     }
 
     function randomNum(max){
@@ -38,6 +56,7 @@ $(document).ready(async function() {
     }
 
     async function alumbrar(id, tiempoEncendido, retrasoEntreEncendidosNormal) {
+        document.getElementById("timerM").textContent = '';
         return new Promise((resolve) => { // para que espere a la ejecucion del timeout antes de continuar
             switch (id) {
                 case "verde":
@@ -75,6 +94,7 @@ $(document).ready(async function() {
                 }, retrasoEntreEncendidosNormal);
             }, tiempoEncendido);
         });
+        
     }
 
     function addElementoASecuenciaJuego(){
@@ -115,7 +135,6 @@ $(document).ready(async function() {
                 if (tramo1 <= 0) {  // fin de juego por timeout
                     clearInterval(timer1);
                     document.getElementById("timerM").textContent = '';
-                    finPorTiempo = true;
                     resolve('timeout');
                 }
             }, 1000);
@@ -155,6 +174,7 @@ $(document).ready(async function() {
     async function juego(tiempoAlumbrado,retrasoEntreEncendidos) {
         juegoRunning = true;
         while(juegoRunning){   // bucle de juego
+            $('#pTimer').css('visibility','hidden');
             addElementoASecuenciaJuego();   // actualizacion de secuencia actual
             //console.log(secuenciaJuego.length);
             //console.log(secuenciaJuego);
@@ -171,7 +191,8 @@ $(document).ready(async function() {
                 await alumbrar(idColor,tiempoAlumbrado,retrasoEntreEncendidos);
             }
 
-            
+            $('#pTimer').css('visibility','visible');
+
             $('#verde').css('pointer-events','auto');   // habilitamos los botones
             $('#rojo').css('pointer-events','auto');
             $('#amarillo').css('pointer-events','auto');
@@ -183,6 +204,9 @@ $(document).ready(async function() {
             let result = await Promise.race([timerRonda(), inputJugador()]);    // espera a resultado entre timer e input usuario
             if (result === 'timeout' || result === 'playerFailed') {
                 console.log(result);
+                $('main').css({   // restauramos background a opacidad original
+                    'background-color': 'rgb(0, 0, 0, 0)'
+                });
                 clearInterval(timer1);
                 juegoRunning = false;
                 document.getElementById("mensaje").textContent = 'Game Over';
@@ -190,6 +214,24 @@ $(document).ready(async function() {
                 $('#rojo').css('pointer-events','none');
                 $('#amarillo').css('pointer-events','none');
                 $('#azul').css('pointer-events','none');
+
+                $('#pTimer').css('visibility','hidden');
+                
+                if(score>=maxScore){
+                    maxScore = score;
+                    document.getElementById("max-score").textContent = score;
+                    await $.ajax({    
+                        type: 'POST',
+                        url: 'https://simon-api-two.vercel.app/api/updateScore',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            "nuevaScore": score
+                        }),
+                        success: function(response) {
+                            console.log(response);
+                        }
+                    });
+                }
                 await new Promise(resolve => setTimeout(resolve, 3000)); 
                 resetVariables();
                 break;
@@ -198,28 +240,43 @@ $(document).ready(async function() {
                 clearInterval(timer1);
                 continue;
             }
-            
-
         }
-        if(score>maxScore){
-            maxScore = score;
-        }
-        document.getElementById("max-score").textContent = score;
     }
 
-    
-
-    $('#startG').on('click',function(){
-        $('#startG').css('pointer-events','none');
-        $('#contDif').css('display','none');
-        const selectElement = document.getElementById('dificultadJ');
-        const selectedOption = selectElement.options[selectElement.selectedIndex];
+    $('#startG').on('click',async function(){
+        $('#startG').css('pointer-events','none');  // deshabilitamos puntero en el propio boton
+        $('#dificultadJCont').css('visibility','hidden');   // no hace falta ahora
+        $('main').css({   // evecto visual para concentrar la atencion del usuario en el juego
+            'background-color': 'rgb(0, 0, 0, 0.9)'
+        });
+        const selectElement = document.getElementById('dificultadJ');   // mandamos la dificultad seleccionada a la funcion
+        const selectedOption = selectElement.options[selectElement.selectedIndex];  
 
         currentTiempoModo = selectedOption.getAttribute('data-tiempalumbr');;
         currentRetrasoEncendido = selectedOption.getAttribute('data-retraencen');
-        console.log(currentTiempoModo,currentRetrasoEncendido);
 
+        document.getElementById("mensaje").textContent = 'Preste atencion';
+        await new Promise(resolve => setTimeout(resolve, 3000));    // 3 segundos de retraso antes de empezar
         juego(currentTiempoModo,currentRetrasoEncendido);
+    });
+
+    $('#botReboot').on('click',function(){
+        window.location = 'index.html';
+    });
+
+    $('#botBorrarRecord').on('click',async function(){
+        await $.ajax({    
+            type: 'POST',
+            url: 'https://simon-api-two.vercel.app/api/updateScore',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                "nuevaScore": 0
+            }),
+            success: function(response) {
+                console.log(response);
+            }
+        });
+        window.location = 'index.html';
     });
 
     $('#verde').on('click',function(){
