@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simon</title>
+  <title>Simon, el clasico juego electronico de memoria, ahora en tu ordenador! Y gratis! Que chollo, meu!</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">  <!-- Libreria de iconos -->
   <link rel="stylesheet" href="../css/index.css">
 </head>
 <body>
-
+  <!-- Carga inicial de sonidos -->
   <audio id="soundGameOver" src="../sound/gameOver.mp3"></audio>
   <audio id="soundGameStart" src="../sound/gameStart.mp3"></audio>
   <audio id="soundGreen" src="../sound/green.mp3"></audio>
@@ -17,12 +17,14 @@
   <audio id="soundYellow" src="../sound/yellow.mp3"></audio>
   <audio id="soundBlue" src="../sound/blue.mp3"></audio>
 
+  <!-- Modal de game over -->
   <div id="gameOverModal" class="modal">
     <div class="modal-content">
         <img src="../img/gameOver.png" alt="Game Over" class="img-fluid">
     </div>
 </div>
   <main>
+    <!-- Botones de control y logo -->
     <div id="top-container" class="d-flex flex-row justify-content-between">
       <div id="botn1">
         <button id="botReboot" class="btn btn-warning w-auto" title="Reiniciar"><i class="fa-solid fa-arrows-rotate"></i></button>
@@ -35,6 +37,7 @@
       </div>
     </div>
     
+    <!--"Barra" nav, puntuaciones y dificultad-->
     <nav>
       <div class="container-fluid">
         <div class="d-flex flex-column align-items-center">
@@ -48,16 +51,13 @@
           </div>
           <div id="dificultadJCont" class="nav-item d-flex align-items-center">
             <label id="labDif" for="dificultadJ" class="form-label me-2">Dificultad:</label>
-            <select class="form-select w-auto" id="dificultadJ">
-              <option value="facil" data-tiempalumbr="1000" data-retraencen="250">Facil</option>
-              <option value="normal" data-tiempalumbr="500" data-retraencen="175" selected>Normal</option>
-              <option value="dificil" data-tiempalumbr="250" data-retraencen="125">Dificil</option>
-            </select>
+            <select class="form-select w-auto" id="dificultadJ"></select>
           </div>
         </div>
       </div>
     </nav>
     
+    <!-- Tablero de juego -->
     <div id="simonT" class="container text-center mt-5">
       <div id="timeCont">
         <p><span id="mensaje">Pulse el boton central para comenzar</span></p>

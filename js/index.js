@@ -7,7 +7,8 @@ $(document).ready(async function() {
 
     $('#pTimer').css('visibility','hidden');
 
-    let secuenciaJuego = [];
+    // variables para el proceso de juego
+    let secuenciaJuego = [];    
     let elementoPulsado = null;
     let juegoRunning = false;
     let timer1;
@@ -15,7 +16,23 @@ $(document).ready(async function() {
     let score = 0;
     let maxScore;
 
+    // tiempos de alumbrado
+    const tiempalumbrFacil = 1000;
+    const tiempalumbrNormal = 500;
+    const tiempalumbrDificil = 250;
 
+    const retraencenFacil = 250;
+    const retraencenNormal = 175;
+    const retraencenDificil = 125;
+
+    // carga dinamica de tiempos en select
+    var options = `<option value="facil" data-tiempalumbr="${tiempalumbrFacil}" data-retraencen="${retraencenFacil}">Facil</option>` +
+                   `<option value="normal" data-tiempalumbr="${tiempalumbrNormal}" data-retraencen="${retraencenNormal}" selected>Normal</option>` +
+                   `<option value="dificil" data-tiempalumbr="${tiempalumbrDificil}" data-retraencen="${retraencenDificil}">Dificil</option>`;
+
+    $('#dificultadJ').append(options);
+
+    // carga de max-score
     await $.ajax({    
         type: 'get',
         url: 'https://simon-api-two.vercel.app/api/getmaxscore',
@@ -31,12 +48,13 @@ $(document).ready(async function() {
         }
     });
 
-    document.getElementById("max-score").textContent = maxScore;
+    document.getElementById("max-score").textContent = maxScore;    // display en pantalla de max score
 
+    // variables para seleccion de modo en funcion de juego
     let currentTiempoModo;
     let currentRetrasoEncendido;
 
-    function resetVariables(){
+    function resetVariables(){  // para el reseteo entre partidas
         $('#mensaje').css('visibility','visible');
         clearInterval(timer1);
         secuenciaJuego = [];
@@ -56,7 +74,7 @@ $(document).ready(async function() {
         return Math.floor(Math.random() * max);
     }
 
-    async function alumbrar(id, tiempoEncendido, retrasoEntreEncendidosNormal) {
+    async function alumbrar(id, tiempoEncendido, retrasoEntreEncendidosNormal) {    // funcion de alumbrado de secuencia
         document.getElementById("timerM").textContent = '';
         return new Promise((resolve) => { // para que espere a la ejecucion del timeout antes de continuar
             switch (id) {
@@ -102,12 +120,12 @@ $(document).ready(async function() {
         
     }
 
-    function addElementoASecuenciaJuego(){
+    function addElementoASecuenciaJuego(){  // añade color (en forma numerica) a la secuencia actual
         let numero = randomNum(4);
         secuenciaJuego.push(numero);
     }
 
-    function leerElementoDeSecuenciaJuego(numero){
+    function leerElementoDeSecuenciaJuego(numero){  // traduce de numero a color
         let color = '';
         switch(numero){
             case 0:
@@ -128,7 +146,7 @@ $(document).ready(async function() {
     
     
 
-    async function timerRonda(){
+    async function timerRonda(){    // timer de tiempo de ronda
         return new Promise((resolve) => {
             let maximo1 = new Date().getTime() + 32000; // aprox 30 sg reales
             timer1 = setInterval(function() {
@@ -146,7 +164,7 @@ $(document).ready(async function() {
         });
     }
 
-    async function inputJugador() {
+    async function inputJugador() { // se encarga de chequear el input del usuario contra la secuencia actual
         return new Promise((resolve) => {
             let lista = secuenciaJuego.slice(); // copia sin afectar el original
     
@@ -159,7 +177,7 @@ $(document).ready(async function() {
                         if (lista.length === 0) {   // cuando la lista se acaba
                             score+=1;
                             document.getElementById("score").textContent = score;
-                            await new Promise(resolve => setTimeout(resolve, 1000));    // timeout antes de volver a visualizar, para que de tiempo a ver la primera
+                            await new Promise(resolve => setTimeout(resolve, 1000));    // timeout antes de volver a visualizar, para que de tiempo a ver el primer color
                             resolve('playerPass');
                         } else {
                             setTimeout(checkInput, 100); // chequeo cada 100ms
@@ -180,8 +198,8 @@ $(document).ready(async function() {
         const modal = document.getElementById('gameOverModal');
         modal.style.display = 'flex';
 
-        var gOver = $('#soundGameOver')[0]; // Get the DOM element
-        gOver.currentTime = 0; // Rewind to the start
+        var gOver = $('#soundGameOver')[0]; // coje el elemento de audio del DOM
+        gOver.currentTime = 0; // se situa al principio
         gOver.play();
 
         await new Promise(resolve => setTimeout(resolve, 3500));
@@ -189,6 +207,7 @@ $(document).ready(async function() {
         modal.style.display = 'none';
     }
 
+    // funciones de reproduccion de sonidos para los colores
     async function soundGreen() {
         var sGreen = $('#soundGreen')[0];
         sGreen.currentTime = 0;
@@ -213,19 +232,18 @@ $(document).ready(async function() {
         sBlue.play();
     }
 
+    // funcion principal de juego
     async function juego(tiempoAlumbrado,retrasoEntreEncendidos) {
         juegoRunning = true;
         while(juegoRunning){   // bucle de juego
-            $('#pTimer').css('visibility','hidden');
+            $('#pTimer').css('visibility','hidden');    // por claridad visual
             addElementoASecuenciaJuego();   // actualizacion de secuencia actual
-            //console.log(secuenciaJuego.length);
-            //console.log(secuenciaJuego);
             $('#verde').css('pointer-events','none');   // anulamos los botones
             $('#rojo').css('pointer-events','none');
             $('#amarillo').css('pointer-events','none');
             $('#azul').css('pointer-events','none');
             
-            $('#mensaje').css('visibility','hidden');
+            $('#mensaje').css('visibility','hidden');    // por claridad visual
 
             for(let i = 0;i<secuenciaJuego.length;i++){ // mostramos visualmente la secuencia actual
                 let idColor = leerElementoDeSecuenciaJuego(secuenciaJuego[i]);
@@ -233,7 +251,7 @@ $(document).ready(async function() {
                 await alumbrar(idColor,tiempoAlumbrado,retrasoEntreEncendidos);
             }
 
-            $('#pTimer').css('visibility','visible');
+            $('#pTimer').css('visibility','visible');    // por claridad visual
 
             $('#verde').css('pointer-events','auto');   // habilitamos los botones
             $('#rojo').css('pointer-events','auto');
@@ -244,24 +262,24 @@ $(document).ready(async function() {
             $('#mensaje').css('visibility','visible');
             document.getElementById("mensaje").textContent = 'Introduzca el patron';
 
-            let result = await Promise.race([timerRonda(), inputJugador()]);    // espera a resultado entre timer e input usuario
-            if (result === 'timeout' || result === 'playerFailed') {
+            let result = await Promise.race([timerRonda(), inputJugador()]);    // espera a un resultado entre timer o input usuario
+            if (result === 'timeout' || result === 'playerFailed') {    // caso de fallo por tiempo o error
                 console.log(result);
                 $('main').css({   // restauramos background a opacidad original
                     'background-color': 'rgb(0, 0, 0, 0)'
                 });
-                clearInterval(timer1);
+                clearInterval(timer1);  // eliminamos timer
                 juegoRunning = false;
-                $('#mensaje').css('visibility','hidden');
+                $('#mensaje').css('visibility','hidden');    // por claridad visual
                 gameOverModal();
                 $('#verde').css('pointer-events','none');   // anulamos los botones
                 $('#rojo').css('pointer-events','none');
                 $('#amarillo').css('pointer-events','none');
                 $('#azul').css('pointer-events','none');
 
-                $('#pTimer').css('visibility','hidden');
+                $('#pTimer').css('visibility','hidden');    // por claridad visual
                 
-                if(score>=maxScore){
+                if(score>=maxScore){    // caso de record de puntuacion, muestra y actualiza en bbdd 
                     maxScore = score;
                     document.getElementById("max-score").textContent = score;
                     await $.ajax({    
@@ -279,7 +297,7 @@ $(document).ready(async function() {
                 await new Promise(resolve => setTimeout(resolve, 3000)); 
                 resetVariables();
                 break;
-            }else if(result === 'playerPass'){
+            }else if(result === 'playerPass'){  // secuencia correcta, pasa a la siguiente iteracion
                 console.log(result);
                 clearInterval(timer1);
                 continue;
@@ -287,10 +305,10 @@ $(document).ready(async function() {
         }
     }
 
-    $('#startG').on('click',async function(){
+    $('#startG').on('click',async function(){   // boton de comienzo de juego
 
-        var gStart = $('#soundGameStart')[0]; // Get the DOM element
-        gStart.currentTime = 0; // Rewind to the start
+        var gStart = $('#soundGameStart')[0];
+        gStart.currentTime = 0;
         gStart.play();
 
         $('#startG').css('pointer-events','none');  // deshabilitamos puntero en el propio boton
@@ -309,11 +327,11 @@ $(document).ready(async function() {
         juego(currentTiempoModo,currentRetrasoEncendido);
     });
 
-    $('#botReboot').on('click',function(){
+    $('#botReboot').on('click',function(){  // reinicio
         window.location = 'index.html';
     });
 
-    $('#botBorrarRecord').on('click',async function(){
+    $('#botBorrarRecord').on('click',async function(){  // borrar puntuacion record
         await $.ajax({    
             type: 'POST',
             url: 'https://simon-api-two.vercel.app/api/updateScore',
@@ -328,6 +346,7 @@ $(document).ready(async function() {
         window.location = 'index.html';
     });
 
+    // funcionalidad de pulsado de colores
     $('#verde').on('click',function(){
         elementoPulsado = 0;    // valor del color
         return new Promise((resolve) => {
