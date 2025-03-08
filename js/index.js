@@ -37,6 +37,7 @@ $(document).ready(async function() {
     let currentRetrasoEncendido;
 
     function resetVariables(){
+        $('#mensaje').css('visibility','visible');
         clearInterval(timer1);
         secuenciaJuego = [];
         juegoRunning = false;
@@ -61,15 +62,19 @@ $(document).ready(async function() {
             switch (id) {
                 case "verde":
                     $('#verde').addClass('illuminati');
+                    soundGreen();
                     break;
                 case "rojo":
                     $('#rojo').addClass('illuminati');
+                    soundRed();
                     break;
                 case "amarillo":
                     $('#amarillo').addClass('illuminati');
+                    soundYellow();
                     break;
                 case "azul":
                     $('#azul').addClass('illuminati');
+                    soundBlue();
                     break;
             }
     
@@ -171,6 +176,43 @@ $(document).ready(async function() {
         });
     }
 
+    async function gameOverModal() {    // modal de game over
+        const modal = document.getElementById('gameOverModal');
+        modal.style.display = 'flex';
+
+        var gOver = $('#soundGameOver')[0]; // Get the DOM element
+        gOver.currentTime = 0; // Rewind to the start
+        gOver.play();
+
+        await new Promise(resolve => setTimeout(resolve, 3500));
+    
+        modal.style.display = 'none';
+    }
+
+    async function soundGreen() {
+        var sGreen = $('#soundGreen')[0];
+        sGreen.currentTime = 0;
+        sGreen.play();
+    }
+
+    async function soundRed() {
+        var sRed = $('#soundRed')[0];
+        sRed.currentTime = 0;
+        sRed.play();
+    }
+
+    async function soundYellow() {
+        var sYellow = $('#soundYellow')[0];
+        sYellow.currentTime = 0;
+        sYellow.play();
+    }
+
+    async function soundBlue() {
+        var sBlue = $('#soundBlue')[0];
+        sBlue.currentTime = 0;
+        sBlue.play();
+    }
+
     async function juego(tiempoAlumbrado,retrasoEntreEncendidos) {
         juegoRunning = true;
         while(juegoRunning){   // bucle de juego
@@ -183,7 +225,7 @@ $(document).ready(async function() {
             $('#amarillo').css('pointer-events','none');
             $('#azul').css('pointer-events','none');
             
-            document.getElementById("mensaje").textContent = 'Preste atencion';
+            $('#mensaje').css('visibility','hidden');
 
             for(let i = 0;i<secuenciaJuego.length;i++){ // mostramos visualmente la secuencia actual
                 let idColor = leerElementoDeSecuenciaJuego(secuenciaJuego[i]);
@@ -199,6 +241,7 @@ $(document).ready(async function() {
             $('#azul').css('pointer-events','auto');
 
             // espera a input usuario
+            $('#mensaje').css('visibility','visible');
             document.getElementById("mensaje").textContent = 'Introduzca el patron';
 
             let result = await Promise.race([timerRonda(), inputJugador()]);    // espera a resultado entre timer e input usuario
@@ -209,7 +252,8 @@ $(document).ready(async function() {
                 });
                 clearInterval(timer1);
                 juegoRunning = false;
-                document.getElementById("mensaje").textContent = 'Game Over';
+                $('#mensaje').css('visibility','hidden');
+                gameOverModal();
                 $('#verde').css('pointer-events','none');   // anulamos los botones
                 $('#rojo').css('pointer-events','none');
                 $('#amarillo').css('pointer-events','none');
@@ -244,6 +288,11 @@ $(document).ready(async function() {
     }
 
     $('#startG').on('click',async function(){
+
+        var gStart = $('#soundGameStart')[0]; // Get the DOM element
+        gStart.currentTime = 0; // Rewind to the start
+        gStart.play();
+
         $('#startG').css('pointer-events','none');  // deshabilitamos puntero en el propio boton
         $('#dificultadJCont').css('visibility','hidden');   // no hace falta ahora
         $('main').css({   // evecto visual para concentrar la atencion del usuario en el juego
@@ -286,7 +335,7 @@ $(document).ready(async function() {
                 'transform': 'scale(1.05)',
                 'z-index': '2'
             });
-
+            soundGreen();
             setTimeout(() => {  // timeout antes de volver a forma original
                         $('#verde').css({
                             'transform': 'scale(1)',
@@ -307,7 +356,7 @@ $(document).ready(async function() {
                 'transform': 'scale(1.05)',
                 'z-index': '2'
             });
-
+            soundRed();
             setTimeout(() => {
                         $('#rojo').css({
                             'transform': 'scale(1)',
@@ -328,7 +377,7 @@ $(document).ready(async function() {
                 'transform': 'scale(1.05)',
                 'z-index': '2'
             });
-
+            soundYellow();
             setTimeout(() => {
                         $('#amarillo').css({
                             'transform': 'scale(1)',
@@ -349,7 +398,7 @@ $(document).ready(async function() {
                 'transform': 'scale(1.05)',
                 'z-index': '2'
             });
-
+            soundBlue();
             setTimeout(() => {
                         $('#azul').css({
                             'transform': 'scale(1)',

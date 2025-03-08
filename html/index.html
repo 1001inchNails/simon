@@ -9,14 +9,29 @@
   <link rel="stylesheet" href="../css/index.css">
 </head>
 <body>
+
+  <audio id="soundGameOver" src="../sound/gameOver.mp3"></audio>
+  <audio id="soundGameStart" src="../sound/gameStart.mp3"></audio>
+  <audio id="soundGreen" src="../sound/green.mp3"></audio>
+  <audio id="soundRed" src="../sound/red.mp3"></audio>
+  <audio id="soundYellow" src="../sound/yellow.mp3"></audio>
+  <audio id="soundBlue" src="../sound/blue.mp3"></audio>
+
+  <div id="gameOverModal" class="modal">
+    <div class="modal-content">
+        <img src="../img/gameOver.png" alt="Game Over" class="img-fluid">
+    </div>
+</div>
   <main>
-    <div id="top-container" class="position-relative">
-      <div id="botns" class="position-absolute top-0 start-0">
+    <div id="top-container" class="d-flex flex-row justify-content-between">
+      <div id="botn1">
         <button id="botReboot" class="btn btn-warning w-auto" title="Reiniciar"><i class="fa-solid fa-arrows-rotate"></i></button>
-        <button id="botBorrarRecord" class="btn btn-danger w-auto" title="Resetear Record"><i class="fa-solid fa-eraser"></i></button>
       </div>
       <div id="logo-container" class="d-flex justify-content-center align-items-center">
         <img src="../img/logo.png" alt="Logo Simon" class="img-fluid">
+      </div>
+      <div id="botn2">
+        <button id="botBorrarRecord" class="btn btn-danger w-auto" title="Resetear Record"><i class="fa-solid fa-eraser"></i></button>
       </div>
     </div>
     

@@ -10,6 +10,12 @@
   font-family: 'tox';
   color: white;
   }
+  html, body ,main{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+  }
 body {
   background-image: url('../img/wave-energy.png');
   background-size: 100% 100%;
@@ -21,6 +27,7 @@ body {
     transition: background-color 0.9s ease;
     background-color: rgb(0, 0, 0, 0);
     height: 100vh;
+    margin: 0;
   }
   .simon-main {
     position: relative;
@@ -163,26 +170,110 @@ body {
 
 #top-container{
   margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
   margin-bottom: 25px;
 }
   
+/* Modal */
+
+/* Modal Background */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 0.8); /* Black with opacity */
+  justify-content: center;
+  align-items: center;
+}
+
+/* Modal Content */
+.modal-content {
+  position: relative;
+  margin: auto;
+  padding: 20px;
+  width: 80%;
+  max-width: 600px;
+  text-align: center;
+  animation: scaleUp 0.5s ease-out;
+}
+
+/* Image inside the modal */
+.modal-content img {
+  width: 100%;
+  height: auto;
+}
+
+/* Animation for modal appearance */
+@keyframes scaleUp {
+  from {
+      transform: scale(0.5);
+      opacity: 0;
+  }
+  to {
+      transform: scale(1);
+      opacity: 1;
+  }
+}
+
+
+
+
   /* Responsive */
-  
+
+/* For screens up to 420px */
+@media (max-width: 420px) {
+  .simon-main {
+    width: 200px;
+    height: 200px;
+  }
+  #botn1 button,
+  #botn2 button {
+    font-size: 0.6rem; /* Smaller font size */
+    padding: 0.2rem 0.5rem; /* Smaller padding */
+  }
+}
+
+/* For screens between 421px and 767px */
+@media (min-width: 421px) and (max-width: 767px) {
   .simon-main {
     width: 300px;
     height: 300px;
   }
-  
-  @media (min-width: 768px) {
-    .simon-main {
-      width: 400px;
-      height: 400px;
-    }
+  #botn1 button,
+  #botn2 button {
+    font-size: 0.7rem; /* Smaller font size */
+    padding: 0.3rem 0.7rem; /* Smaller padding */
   }
-  
-  @media (min-width: 1200px) {
-    .simon-main {
-      width: 500px;
-      height: 500px;
-    }
+}
+
+/* For screens between 768px and 1199px */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .simon-main {
+    width: 400px;
+    height: 400px;
   }
+  #botn1 button,
+  #botn2 button {
+    font-size: 0.8rem; /* Smaller font size */
+    padding: 0.4rem 0.9rem; /* Smaller padding */
+  }
+}
+
+/* For screens 1200px and above */
+@media (min-width: 1200px) {
+  .simon-main {
+    width: 500px;
+    height: 500px;
+  }
+  #botn1 button,
+  #botn2 button {
+    font-size: 1rem; /* Smaller font size */
+    padding: 0.6rem 1rem; /* Smaller padding */
+  }
+}

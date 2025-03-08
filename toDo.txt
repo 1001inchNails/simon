@@ -1,11 +1,3 @@
-cambiar botones, posicion o tamaño al decrease screen
-cambiar responsive, modo normal mas grande
-meterle css, organizar todo bien
-
-hacer el cambio de turno y fin de partida mas evidente, estilo/fondo/posicion de los avisos
-
-
-meterle sonidos
 
 comentarios
 
